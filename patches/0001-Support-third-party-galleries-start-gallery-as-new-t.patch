@@ -1,0 +1,48 @@
+From 0760ec7fd233cbea835a29c0e3c4fdd6ea224971 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sat, 31 Oct 2026 16:20:07 +0700
+Subject: [PATCH 1/3] Support third party galleries + start gallery as new task
+
+---
+ smali/a0/l5.smali                     | 4 ----
+ smali/com/android/camera/Camera.smali | 8 ++++++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/smali/a0/l5.smali b/smali/a0/l5.smali
+index a7d8d012..d33f55dd 100644
+--- a/smali/a0/l5.smali
++++ b/smali/a0/l5.smali
+@@ -136,10 +136,6 @@
+     invoke-direct {v1, v5, p2}, Landroid/content/Intent;-><init>(Ljava/lang/String;Landroid/net/Uri;)V
+ 
+     :goto_0
+-    const-string p2, "com.miui.gallery"
+-
+-    invoke-virtual {v1, p2}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
+-
+     const-string p2, "from_MiuiCamera"
+ 
+     invoke-virtual {v1, p2, v2}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Z)Landroid/content/Intent;
+diff --git a/smali/com/android/camera/Camera.smali b/smali/com/android/camera/Camera.smali
+index a1503b0a..f7b965bf 100644
+--- a/smali/com/android/camera/Camera.smali
++++ b/smali/com/android/camera/Camera.smali
+@@ -5856,9 +5856,13 @@
+ 
+     invoke-direct {p0, p1}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
+ 
+-    const-string p1, "com.miui.gallery"
++    const-string p1, "android.intent.category.APP_GALLERY"
+ 
+-    invoke-virtual {p0, p1}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
++    invoke-virtual {p0, p1}, Landroid/content/Intent;->addCategory(Ljava/lang/String;)Landroid/content/Intent;
++
++    const/high16 p1, 0x10000000
++
++    invoke-virtual {p0, p1}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
+ 
+     invoke-virtual {v0, p0}, Landroid/app/Activity;->startActivity(Landroid/content/Intent;)V
+ 
+-- 
+2.43.0
+

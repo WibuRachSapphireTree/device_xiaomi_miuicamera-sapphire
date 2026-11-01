@@ -1,0 +1,108 @@
+From 9f907ae50e69850e1e2baff91ed57f23f10f7592 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sun, 1 Nov 2026 13:45:23 +0700
+Subject: [PATCH] Disable parallel processing in night and other modules
+
+---
+ .../camera/features/mode/night/photo/NightModule.smali    | 4 ++++
+ .../android/camera/features/mode/pixel/PixelModule.smali  | 8 ++++++++
+ .../camera/features/mode/pro/photo/ProModule.smali        | 8 ++++++++
+ .../com/android/camera/module/SuperMoonModule.smali       | 8 ++++++++
+ 4 files changed, 28 insertions(+)
+
+diff --git a/smali/com/android/camera/features/mode/night/photo/NightModule.smali b/smali/com/android/camera/features/mode/night/photo/NightModule.smali
+index 2981420..da8daae 100644
+--- a/smali/com/android/camera/features/mode/night/photo/NightModule.smali
++++ b/smali/com/android/camera/features/mode/night/photo/NightModule.smali
+@@ -483,6 +483,10 @@
+         type = 0x0
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     invoke-static {}, Ly2/b;->e()Z
+ 
+     move-result v0
+diff --git a/smali/com/android/camera/features/mode/pixel/PixelModule.smali b/smali/com/android/camera/features/mode/pixel/PixelModule.smali
+index 0e493d1..f9be07c 100644
+--- a/smali/com/android/camera/features/mode/pixel/PixelModule.smali
++++ b/smali/com/android/camera/features/mode/pixel/PixelModule.smali
+@@ -55,6 +55,10 @@
+     .annotation build Lcom/android/camera/jacoco/JacocoForceIgnore;
+     .end annotation
+ 
++    const/4 p0, 0x0
++
++    return p0
++
+     iget-object p0, p0, Lcom/android/camera/module/BaseModule;->mModuleStateMgr:Lu6/f;
+ 
+     invoke-interface {p0}, Lu6/f;->G0()Z
+@@ -469,6 +473,10 @@
+         type = 0x0
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     invoke-static {}, Ly2/b;->e()Z
+ 
+     move-result v0
+diff --git a/smali/com/android/camera/features/mode/pro/photo/ProModule.smali b/smali/com/android/camera/features/mode/pro/photo/ProModule.smali
+index e72cb7c..8ef7148 100644
+--- a/smali/com/android/camera/features/mode/pro/photo/ProModule.smali
++++ b/smali/com/android/camera/features/mode/pro/photo/ProModule.smali
+@@ -1820,6 +1820,10 @@
+     .annotation build Lcom/android/camera/jacoco/JacocoForceIgnore;
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     iget-object v0, p0, Lcom/android/camera/module/BaseModule;->mModuleStateMgr:Lu6/f;
+ 
+     invoke-interface {v0}, Lu6/f;->G0()Z
+@@ -2680,6 +2684,10 @@
+         type = 0x0
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     invoke-static {}, Ly2/b;->e()Z
+ 
+     move-result v0
+diff --git a/smali_classes2/com/android/camera/module/SuperMoonModule.smali b/smali_classes2/com/android/camera/module/SuperMoonModule.smali
+index b84a3a2..ceafcf7 100644
+--- a/smali_classes2/com/android/camera/module/SuperMoonModule.smali
++++ b/smali_classes2/com/android/camera/module/SuperMoonModule.smali
+@@ -695,6 +695,10 @@
+         type = 0x0
+     .end annotation
+ 
++    const/4 p0, 0x0
++
++    return p0
++
+     iget-boolean p0, p0, Lcom/android/camera/module/SuperMoonModule;->mEnableParallelSession:Z
+ 
+     return p0
+@@ -6850,6 +6854,10 @@
+ .method public isParallelSessionEnable()Z
+     .locals 0
+ 
++    const/4 p0, 0x0
++
++    return p0
++
+     sget-boolean p0, Ltc/b;->i:Z
+ 
+     sget-object p0, Ltc/b$b;->a:Ltc/b;
+-- 
+2.43.0
+

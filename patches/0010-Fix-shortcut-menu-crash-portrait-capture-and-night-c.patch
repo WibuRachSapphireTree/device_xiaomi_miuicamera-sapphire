@@ -1,0 +1,95 @@
+From d0433879080d91787f9322a45b925cb2a3109338 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sun, 1 Nov 2026 17:03:49 +0700
+Subject: [PATCH] Fix shortcut menu crash, portrait capture hang, and night
+ mode HAL crash
+
+---
+ smali_classes2/h7/g.smali |  8 ++++++++
+ smali_classes2/h7/j.smali |  8 ++++++++
+ smali_classes3/se/a.smali | 15 ++++++++++-----
+ 3 files changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/smali_classes2/h7/g.smali b/smali_classes2/h7/g.smali
+index b0dfa63d..a7705e83 100644
+--- a/smali_classes2/h7/g.smali
++++ b/smali_classes2/h7/g.smali
+@@ -54,6 +54,14 @@
+ .method public final c()Ljava/lang/Object;
+     .locals 6
+ 
++    const/4 v0, 0x0
++
++    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v0
++
++    return-object v0
++
+     sget-boolean v0, Ltc/b;->i:Z
+ 
+     sget-object v0, Ltc/b$b;->a:Ltc/b;
+diff --git a/smali_classes2/h7/j.smali b/smali_classes2/h7/j.smali
+index 97391ec0..86803112 100644
+--- a/smali_classes2/h7/j.smali
++++ b/smali_classes2/h7/j.smali
+@@ -54,6 +54,14 @@
+ .method public final c()Ljava/lang/Object;
+     .locals 5
+ 
++    const/4 v0, 0x0
++
++    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v0
++
++    return-object v0
++
+     sget-boolean v0, Ltc/b;->i:Z
+ 
+     sget-object v0, Ltc/b$b;->a:Ltc/b;
+diff --git a/smali_classes3/se/a.smali b/smali_classes3/se/a.smali
+index 68f6d7e9..53f2ceab 100644
+--- a/smali_classes3/se/a.smali
++++ b/smali_classes3/se/a.smali
+@@ -166,6 +166,7 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/j;->f(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    :try_start_0
+     invoke-static {p0}, Lpe/a;->a(Landroid/content/res/Resources;)Ljava/util/Set;
+ 
+     move-result-object v0
+@@ -180,20 +181,24 @@
+ 
+     if-eqz v0, :cond_0
+ 
+-    const/4 p2, 0x0
++    const/4 v0, 0x0
+ 
+-    invoke-static {p0, p1, p2}, Lse/a;->d(Landroid/content/res/Resources;ILjava/lang/Integer;)Landroid/graphics/drawable/Drawable;
++    invoke-static {p0, p1, v0}, Lse/a;->d(Landroid/content/res/Resources;ILjava/lang/Integer;)Landroid/graphics/drawable/Drawable;
+ 
+-    move-result-object p0
++    move-result-object v0
+ 
+-    goto :goto_0
++    if-eqz v0, :cond_0
+ 
++    return-object v0
++    :try_end_0
++    .catchall {:try_start_0 .. :try_end_0} :catchall_0
++
++    :catchall_0
+     :cond_0
+     invoke-static {p0, p1, p2}, Landroidx/core/content/res/ResourcesCompat;->getDrawable(Landroid/content/res/Resources;ILandroid/content/res/Resources$Theme;)Landroid/graphics/drawable/Drawable;
+ 
+     move-result-object p0
+ 
+-    :goto_0
+     return-object p0
+ .end method
+ 
+-- 
+2.43.0
+

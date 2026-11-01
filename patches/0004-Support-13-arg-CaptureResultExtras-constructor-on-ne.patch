@@ -1,0 +1,148 @@
+From d6c9cc01f2659116ad38887185b49934fd7e4028 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sun, 1 Nov 2026 00:36:17 +0700
+Subject: [PATCH] Support 13-arg CaptureResultExtras constructor on new SDK
+
+---
+ .../protocol/ICustomCaptureResult.smali       | 126 ++++++++++++++++++
+ 1 file changed, 126 insertions(+)
+
+diff --git a/smali_classes4/com/xiaomi/protocol/ICustomCaptureResult.smali b/smali_classes4/com/xiaomi/protocol/ICustomCaptureResult.smali
+index 48dad75..02da6ba 100644
+--- a/smali_classes4/com/xiaomi/protocol/ICustomCaptureResult.smali
++++ b/smali_classes4/com/xiaomi/protocol/ICustomCaptureResult.smali
+@@ -406,6 +406,132 @@
+ 
+     if-lt v0, v7, :cond_0
+ 
++    :try_start_n13
++    const/16 v0, 0xd
++
++    new-array v7, v0, [Ljava/lang/Class;
++
++    sget-object v18, Ljava/lang/Integer;->TYPE:Ljava/lang/Class;
++
++    sget-object v19, Ljava/lang/Long;->TYPE:Ljava/lang/Class;
++
++    aput-object v18, v7, v2
++
++    aput-object v18, v7, v16
++
++    aput-object v18, v7, v15
++
++    aput-object v18, v7, v14
++
++    aput-object v19, v7, v13
++
++    aput-object v18, v7, v12
++
++    aput-object v18, v7, v11
++
++    aput-object v8, v7, v9
++
++    aput-object v19, v7, v10
++
++    const/16 v20, 0x9
++
++    aput-object v19, v7, v20
++
++    const/16 v20, 0xa
++
++    aput-object v19, v7, v20
++
++    const/16 v20, 0xb
++
++    sget-object v21, Ljava/lang/Boolean;->TYPE:Ljava/lang/Class;
++
++    aput-object v21, v7, v20
++
++    const/16 v20, 0xc
++
++    aput-object v19, v7, v20
++
++    invoke-virtual {v6, v7}, Ljava/lang/Class;->getDeclaredConstructor([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
++
++    move-result-object v7
++
++    new-array v0, v0, [Ljava/lang/Object;
++
++    invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v17
++
++    aput-object v17, v0, v2
++
++    invoke-static {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v17
++
++    aput-object v17, v0, v16
++
++    aput-object v17, v0, v15
++
++    aput-object v17, v0, v14
++
++    aput-object v17, v0, v12
++
++    aput-object v17, v0, v11
++
++    invoke-static {v4, v5}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v19
++
++    aput-object v19, v0, v13
++
++    const/16 v19, 0x0
++
++    aput-object v19, v0, v9
++
++    const-wide/16 v17, -0x1
++
++    invoke-static/range {v17 .. v18}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v19
++
++    aput-object v19, v0, v10
++
++    const/16 v20, 0x9
++
++    aput-object v19, v0, v20
++
++    const/16 v20, 0xa
++
++    aput-object v19, v0, v20
++
++    invoke-static {v2}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
++
++    move-result-object v19
++
++    const/16 v20, 0xb
++
++    aput-object v19, v0, v20
++
++    const-wide/16 v17, 0x0
++
++    invoke-static/range {v17 .. v18}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v19
++
++    const/16 v20, 0xc
++
++    aput-object v19, v0, v20
++
++    invoke-virtual {v7, v0}, Ljava/lang/reflect/Constructor;->newInstance([Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v0
++
++    :try_end_n13
++    .catch Ljava/lang/Exception; {:try_start_n13 .. :try_end_n13} :catch_n13
++
++    goto/16 :goto_0
++
++    :catch_n13
++
+     const/16 v0, 0xb
+ 
+     :try_start_1
+-- 
+2.43.0

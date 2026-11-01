@@ -1,0 +1,85 @@
+From 206fe73e2de45e519dd2a6a8ee61d34a6cdaf68f Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sun, 1 Nov 2026 17:46:49 +0700
+Subject: [PATCH] Fix NullPointerException and corrupted image when saving watermark photos
+
+---
+ smali_classes2/s9/c.smali | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/smali_classes2/s9/c.smali b/smali_classes2/s9/c.smali
+index 0a1824f8..6426b186 100644
+--- a/smali_classes2/s9/c.smali
++++ b/smali_classes2/s9/c.smali
+@@ -185,6 +185,15 @@
+ .method public static c(Landroid/hardware/camera2/TotalCaptureResult;)Lyh/b;
+     .locals 10
+ 
++    if-nez p0, :cond_c_not_null
++
++    new-instance v0, Lyh/b;
++
++    invoke-direct {v0}, Lyh/b;-><init>()V
++
++    return-object v0
++
++    :cond_c_not_null
+     sget-object v0, Landroid/hardware/camera2/CaptureResult;->SENSOR_EXPOSURE_TIME:Landroid/hardware/camera2/CaptureResult$Key;
+ 
+     invoke-virtual {p0, v0}, Landroid/hardware/camera2/CaptureResult;->get(Landroid/hardware/camera2/CaptureResult$Key;)Ljava/lang/Object;
+@@ -357,6 +366,35 @@
+     return-void
+ 
+     :cond_0
++    iget-object v0, v1, Lfh/q;->i:[B
++
++    if-eqz v0, :cond_not_jpeg
++
++    array-length v2, v0
++
++    const/4 v3, 0x2
++
++    if-lt v2, v3, :cond_not_jpeg
++
++    const/4 v2, 0x0
++
++    aget-byte v2, v0, v2
++
++    const/4 v3, -0x1
++
++    if-ne v2, v3, :cond_not_jpeg
++
++    const/4 v2, 0x1
++
++    aget-byte v0, v0, v2
++
++    const/16 v2, -0x28
++
++    if-ne v0, v2, :cond_not_jpeg
++
++    return-void
++
++    :cond_not_jpeg
+     iget-object v0, v1, Lfh/q;->q:Lfh/r;
+ 
+     iget-boolean v0, v0, Lfh/r;->a:Z
+@@ -401,10 +439,17 @@
+ 
+     iget-object v3, v1, Lfh/q;->g:Lcom/xiaomi/protocol/ICustomCaptureResult;
+ 
++    if-eqz v3, :cond_no_ccr
++
+     invoke-static {v3, v4}, Lcom/xiaomi/protocol/ICustomCaptureResult;->toTotalCaptureResult(Lcom/xiaomi/protocol/ICustomCaptureResult;I)Landroid/hardware/camera2/TotalCaptureResult;
+ 
+     move-result-object v3
+ 
++    goto :cond_3
++
++    :cond_no_ccr
++    const/4 v3, 0x0
++
+     :cond_3
+     invoke-static {v3}, Ls9/c;->c(Landroid/hardware/camera2/TotalCaptureResult;)Lyh/b;
+ 
+-- 
+2.43.0

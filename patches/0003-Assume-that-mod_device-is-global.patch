@@ -1,0 +1,25 @@
+From fb8acfaaaadf264a6d8d65b387d7fba80289631d Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sat, 31 Oct 2026 16:23:21 +0700
+Subject: [PATCH 3/3] Assume that mod_device is global
+
+---
+ smali_classes4/qs/a.smali | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/smali_classes4/qs/a.smali b/smali_classes4/qs/a.smali
+index 1d29d9c5..8383c20f 100644
+--- a/smali_classes4/qs/a.smali
++++ b/smali_classes4/qs/a.smali
+@@ -35,7 +35,7 @@
+ 
+     invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+ 
+-    move-result v0
++    const/4 v0, 0x1
+ 
+     sput-boolean v0, Lqs/a;->a:Z
+ 
+-- 
+2.43.0
+

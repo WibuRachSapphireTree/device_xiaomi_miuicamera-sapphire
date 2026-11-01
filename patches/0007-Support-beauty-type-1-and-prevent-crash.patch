@@ -1,0 +1,62 @@
+From 8b26b02312385a2f48cbfea48fdf8089fc5cf400 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sun, 1 Nov 2026 13:33:54 +0700
+Subject: [PATCH] FragmentBeauty: Support beauty type 1 and prevent crash on
+ unknown beauty types
+
+---
+ .../camera/fragment/FragmentBeauty.smali      | 24 ++++++++++---------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/smali_classes2/com/android/camera/fragment/FragmentBeauty.smali b/smali_classes2/com/android/camera/fragment/FragmentBeauty.smali
+index ab5f001..06c527d 100644
+--- a/smali_classes2/com/android/camera/fragment/FragmentBeauty.smali
++++ b/smali_classes2/com/android/camera/fragment/FragmentBeauty.smali
+@@ -1556,6 +1556,10 @@
+ 
+     if-eq v8, v9, :cond_19
+ 
++    const/16 v9, 0x31
++
++    if-eq v8, v9, :cond_19
++
+     const/16 v9, 0x623
+ 
+     if-eq v8, v9, :cond_17
+@@ -1803,6 +1807,14 @@
+ 
+     if-nez v8, :cond_1a
+ 
++    const-string v8, "1"
++
++    invoke-virtual {v7, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
++
++    move-result v8
++
++    if-nez v8, :cond_1a
++
+     :goto_3
+     const/4 v8, -0x1
+ 
+@@ -2018,17 +2030,7 @@
+     goto/16 :goto_2
+ 
+     :cond_1e
+-    new-instance p0, Ljava/lang/RuntimeException;
+-
+-    const-string/jumbo p1, "unknown beauty type: "
+-
+-    invoke-virtual {p1, v7}, Ljava/lang/String;->concat(Ljava/lang/String;)Ljava/lang/String;
+-
+-    move-result-object p1
+-
+-    invoke-direct {p0, p1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+-
+-    throw p0
++    goto/16 :goto_2
+ 
+     :cond_1f
+     invoke-virtual {p0, v4}, Lcom/android/camera/fragment/FragmentViewPagerContainer;->setPagerFragmentContainer(Ljava/util/List;)V
+-- 
+2.43.0
+

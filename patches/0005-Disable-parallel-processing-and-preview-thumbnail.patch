@@ -1,0 +1,59 @@
+From a1b2c3d4e5f60718293a4b5c6d7e8f9012345678 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sun, 1 Nov 2026 11:58:00 +0700
+Subject: [PATCH] Disable parallel processing and preview thumbnail for instant capture
+
+---
+ smali_classes2/com/android/camera/module/Camera2Module.smali | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/smali_classes2/com/android/camera/module/Camera2Module.smali b/smali_classes2/com/android/camera/module/Camera2Module.smali
+index 7883866..2b14331 100644
+--- a/smali_classes2/com/android/camera/module/Camera2Module.smali
++++ b/smali_classes2/com/android/camera/module/Camera2Module.smali
+@@ -5055,6 +5055,10 @@
+ .method private isParallel()Z
+     .locals 4
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     new-instance v0, Ljava/lang/StringBuilder;
+ 
+     const-string v1, "is Parallel path, shot2Galley: "
+@@ -20526,6 +20530,10 @@
+     .annotation build Lcom/android/camera/jacoco/JacocoForceIgnore;
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     iget-object v0, p0, Lcom/android/camera/module/BaseModule;->mModuleStateMgr:Lu6/f;
+ 
+     invoke-interface {v0}, Lu6/f;->G0()Z
+@@ -25431,6 +25439,10 @@
+         type = 0x0
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     invoke-static {}, Ly2/b;->e()Z
+ 
+     move-result v0
+@@ -26050,6 +26062,10 @@
+     .annotation build Lcom/android/camera/jacoco/JacocoForceIgnore;
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    return v0
++
+     iget-boolean v0, p0, Lcom/android/camera/module/Camera2Module;->mEnableShot2Gallery:Z
+ 
+     if-nez v0, :cond_1
+-- 
+2.43.0

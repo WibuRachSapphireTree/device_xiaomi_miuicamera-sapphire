@@ -1,0 +1,149 @@
+From caf5d6d45f200c88b1975a25568064c378a17bc9 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Sat, 31 Oct 2026 16:22:10 +0700
+Subject: [PATCH 2/3] Force enable StartActivityWhenLocked + read AOSP int
+ camera_launch_source
+
+---
+ smali_classes4/jk/c.smali | 104 +++++++-------------------------------
+ 1 file changed, 17 insertions(+), 87 deletions(-)
+
+diff --git a/smali_classes4/jk/c.smali b/smali_classes4/jk/c.smali
+index 74b0b6b7..904d01e1 100644
+--- a/smali_classes4/jk/c.smali
++++ b/smali_classes4/jk/c.smali
+@@ -251,62 +251,11 @@
+ .end method
+ 
+ .method public static r(Landroid/content/Intent;)Z
+-    .locals 3
+-
+-    const/4 v0, 0x0
+-
+-    if-eqz p0, :cond_1
+-
+-    const-string v1, "StartActivityWhenLocked"
+-
+-    invoke-virtual {p0, v1, v0}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
+-
+-    move-result v1
+-
+-    if-nez v1, :cond_0
+-
+-    const-string v1, "from_keyguard_shortcut"
+-
+-    invoke-virtual {p0, v1, v0}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
+-
+-    move-result v1
+-
+-    if-nez v1, :cond_0
+-
+-    const-string v1, "android.media.action.STILL_IMAGE_CAMERA_SECURE"
+-
+-    invoke-virtual {p0}, Landroid/content/Intent;->getAction()Ljava/lang/String;
+-
+-    move-result-object p0
+-
+-    invoke-virtual {v1, p0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+-
+-    move-result p0
+-
+-    if-eqz p0, :cond_1
+-
+-    :cond_0
+-    const/4 p0, 0x1
+-
+-    goto :goto_0
+-
+-    :cond_1
+-    move p0, v0
+-
+-    :goto_0
+-    const-string v1, "start activity when locked: "
+-
+-    invoke-static {v1, p0}, La0/y;->h(Ljava/lang/String;Z)Ljava/lang/String;
+-
+-    move-result-object v1
+-
+-    new-array v0, v0, [Ljava/lang/Object;
+-
+-    const-string v2, "CameraIntentManager"
++    .locals 1
+ 
+-    invoke-static {v2, v1, v0}, Lcom/android/camera/log/Log;->d(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
++    const/4 v0, 0x1
+ 
+-    return p0
++    return v0
+ .end method
+ 
+ .method public static u(Landroid/content/Intent;)Z
+@@ -1221,13 +1170,19 @@
+     :cond_0
+     const-string v2, "com.android.systemui.camera_launch_source"
+ 
+-    invoke-virtual {v0, v2}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
++    const/4 v3, -0x1
+ 
+-    move-result-object v0
++    invoke-virtual {v0, v2, v3}, Landroid/content/Intent;->getIntExtra(Ljava/lang/String;I)I
++
++    move-result v0
+ 
+-    const-string v2, "camera_launch_source = "
++    invoke-static {v0}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+ 
+-    invoke-static {v2, v0}, La0/v;->i(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    move-result-object v2
++
++    const-string v3, "camera_launch_source = "
++
++    invoke-static {v3, v2}, La0/v;->i(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v2
+ 
+@@ -1255,37 +1210,12 @@
+ 
+     if-eqz p0, :cond_1
+ 
+-    const-string p0, "power_double_tap"
+-
+-    invoke-static {v0, p0}, Landroid/text/TextUtils;->equals(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z
+-
+-    move-result p0
+-
+-    if-nez p0, :cond_1
+-
+-    const-string p0, "double_click_volume_down"
+-
+-    invoke-static {v0, p0}, Landroid/text/TextUtils;->equals(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z
+-
+-    move-result p0
+-
+-    if-nez p0, :cond_1
+-
+-    const-string p0, "stabilizer"
+-
+-    invoke-static {v0, p0}, Landroid/text/TextUtils;->equals(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z
+-
+-    move-result p0
+-
+-    if-nez p0, :cond_1
+-
+-    const-string p0, "miwatch"
++    # CAMERA_LAUNCH_SOURCE_POWER_DOUBLE_TAP = 1
++    const/4 p0, 0x1
+ 
+-    invoke-static {v0, p0}, Landroid/text/TextUtils;->equals(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z
++    if-eq v0, p0, :cond_1
+ 
+-    move-result p0
+-
+-    if-eqz p0, :cond_2
++    goto :cond_2
+ 
+     :cond_1
+     const/4 v1, 0x1
+-- 
+2.43.0
+

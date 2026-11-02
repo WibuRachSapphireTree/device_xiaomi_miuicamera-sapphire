@@ -66,7 +66,15 @@ blob_fixups: blob_fixups_user_type = {
         .sig_replace('B1 02 40 B9 0A 02 11 6B 23 09 00 54',
                      'B1 02 40 B9 0A 02 11 6B 1F 20 03 D5')
         .sig_replace('B6 06 40 B9 0C 00 16 6B A3 08 00 54',
-                     'B6 06 40 B9 0C 00 16 6B 1F 20 03 D5'),
+                     'B6 06 40 B9 0C 00 16 6B 1F 20 03 D5')
+        .sig_replace('3F C1 29 EB 61 08 00 54',
+                     '3F C1 29 EB 1F 20 03 D5')
+        .sig_replace('6B 01 01 6B E6 07 00 54',
+                     '6B 01 01 6B 1F 20 03 D5')
+        .sig_replace('DF 7D 60 F2 61 07 00 54',
+                     'DF 7D 60 F2 1F 20 03 D5')
+        .sig_replace('C0 03 5F D6 E5 0A 00 94 D4 0A 00 94',
+                     'C0 03 5F D6 F9 FF FF 17 F8 FF FF 17'),
 }  # fmt: skip
 
 module = ExtractUtilsModule(

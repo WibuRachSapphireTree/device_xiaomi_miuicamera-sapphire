@@ -1,0 +1,72 @@
+From 09282ed74606be9234974c74ec2bd6fe669d4818 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Mon, 2 Nov 2026 18:11:27 +0700
+Subject: [PATCH] MiuiCamera: Support 108MP Ultra Pixel capture without
+ customSizes tag
+
+---
+ smali_classes2/ca/d.smali | 17 +++++++++++++----
+ smali_classes2/x6/h.smali | 11 ++++++++++-
+ 2 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/smali_classes2/ca/d.smali b/smali_classes2/ca/d.smali
+index 493165d8..0b470540 100644
+--- a/smali_classes2/ca/d.smali
++++ b/smali_classes2/ca/d.smali
+@@ -3536,13 +3536,22 @@
+ 
+     :cond_1
+     :goto_0
+-    new-array v1, v3, [I
++    :cond_2
++    invoke-static {p0}, Lca/d;->R(Lca/c;)Ljava/lang/String;
+ 
+-    iput-object v1, p0, Lca/c;->D9:[I
++    move-result-object v1
+ 
+-    goto :goto_1
++    invoke-static {v1}, Ltc/b;->s(Ljava/lang/String;)Landroid/util/Size;
+ 
+-    :cond_2
++    move-result-object v1
++
++    if-eqz v1, :cond_fallback
++
++    iput-object v1, p0, Lca/c;->E9:Landroid/util/Size;
++
++    return-object v1
++
++    :cond_fallback
+     new-array v1, v3, [I
+ 
+     iput-object v1, p0, Lca/c;->D9:[I
+diff --git a/smali_classes2/x6/h.smali b/smali_classes2/x6/h.smali
+index e588affd..deca223e 100644
+--- a/smali_classes2/x6/h.smali
++++ b/smali_classes2/x6/h.smali
+@@ -27,12 +27,21 @@
+     return v0
+ 
+     :cond_0
+-    invoke-static {}, Lcom/android/camera/data/data/s;->j()Z
++    invoke-static {}, Lcom/android/camera/data/data/o;->T()Z
+ 
+     move-result p0
+ 
+     const/4 v1, 0x1
+ 
++    if-eqz p0, :cond_qcfa_normal
++
++    return v1
++
++    :cond_qcfa_normal
++    invoke-static {}, Lcom/android/camera/data/data/s;->j()Z
++
++    move-result p0
++
+     if-eqz p0, :cond_1
+ 
+     return v1
+-- 
+2.43.0
+

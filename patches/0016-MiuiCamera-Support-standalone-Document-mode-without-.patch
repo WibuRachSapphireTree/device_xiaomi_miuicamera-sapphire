@@ -1,0 +1,368 @@
+From 4e095cf0b14695922f5a50296750f94b244aca88 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Tue, 3 Nov 2026 18:54:52 +0700
+Subject: [PATCH] MiuiCamera: Support standalone Document mode without
+ MiuiGallery
+
+---
+ smali/androidx/activity/m.smali               |   4 +-
+ .../camera/features/mode/doc/DocModule.smali  | 135 +++------------
+ smali/mg/d.smali                              | 161 +-----------------
+ 3 files changed, 31 insertions(+), 269 deletions(-)
+
+diff --git a/smali/androidx/activity/m.smali b/smali/androidx/activity/m.smali
+index 2780c9de..ffc7829b 100644
+--- a/smali/androidx/activity/m.smali
++++ b/smali/androidx/activity/m.smali
+@@ -715,9 +715,7 @@
+     iput-object v1, p0, La0/l5;->e:Lio/reactivex/disposables/Disposable;
+ 
+     :cond_12
+-    iget-boolean v1, p0, La0/l5;->c:Z
+-
+-    if-nez v1, :cond_13
++    goto :cond_13
+ 
+     :try_start_3
+     invoke-static {}, Lfh/c;->b()Lfh/c;
+diff --git a/smali/com/android/camera/features/mode/doc/DocModule.smali b/smali/com/android/camera/features/mode/doc/DocModule.smali
+index d546fd33..68d4c679 100644
+--- a/smali/com/android/camera/features/mode/doc/DocModule.smali
++++ b/smali/com/android/camera/features/mode/doc/DocModule.smali
+@@ -73,107 +73,8 @@
+ .end method
+ 
+ .method private callGalleryDocumentPage(Ljava/lang/String;Ljava/lang/String;Lcom/android/camera/module/t0;)V
+-    .locals 8
+-    .annotation build Lcom/android/camera/jacoco/JacocoIgnore;
+-        ignore = false
+-        key = "isSupportDocumentMode1"
+-        type = 0x0
+-    .end annotation
+-
+-    new-instance v0, Ljava/lang/StringBuilder;
+-
+-    const-string v1, "callGalleryDocumentPage effect: "
+-
+-    invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+-
+-    invoke-virtual {v0, p2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+-
+-    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+-
+-    move-result-object v0
+-
+-    const-string v1, "DocModule"
+-
+-    invoke-static {v1, v0}, Lcom/android/camera/log/LogK;->i(Ljava/lang/String;Ljava/lang/String;)V
+-
+-    invoke-static {}, Lzt/d;->m()Z
+-
+-    move-result v0
+-
+-    if-eqz v0, :cond_0
+-
+-    invoke-static {}, Lzt/d;->h()Ljava/lang/String;
+-
+-    move-result-object v0
+-
+-    goto :goto_0
+-
+-    :cond_0
+-    const-string v0, ""
+-
+-    :goto_0
+-    move-object v6, v0
+-
+-    iget-object v0, p0, Lcom/android/camera/features/mode/doc/DocModule;->mDocPicUri:Landroid/net/Uri;
+-
+-    if-nez v0, :cond_1
+-
+-    const/4 p0, 0x0
+-
+-    new-array p0, p0, [Ljava/lang/Object;
+-
+-    const-string p1, "callGalleryDocumentPage: doc pic deleted, return"
+-
+-    invoke-static {v1, p1, p0}, Lcom/android/camera/log/Log;->w(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+-
+-    return-void
+-
+-    :cond_1
+-    sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
+-
+-    const/16 v1, 0x21
+-
+-    if-le v0, v1, :cond_2
+-
+-    iget-object p1, p0, Lcom/android/camera/features/mode/doc/DocModule;->mDocPicUri:Landroid/net/Uri;
+-
+-    goto :goto_1
+-
+-    :cond_2
+-    invoke-static {p1}, Lcj/a;->c(Ljava/lang/String;)Landroid/net/Uri;
+-
+-    move-result-object p1
+-
+-    :goto_1
+-    move-object v4, p1
+-
+-    invoke-virtual {p0}, Lcom/android/camera/module/BaseModule;->getActivityOpt()Ljava/util/Optional;
+-
+-    move-result-object p1
+-
+-    new-instance v0, Li3/a;
+-
+-    const/4 v7, 0x0
+-
+-    move-object v2, v0
+-
+-    move-object v3, p0
+-
+-    move-object v5, p2
+-
+-    invoke-direct/range {v2 .. v7}, Li3/a;-><init>(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/CharSequence;Ljava/io/Serializable;I)V
+-
+-    invoke-virtual {p1, v0}, Ljava/util/Optional;->ifPresent(Ljava/util/function/Consumer;)V
+-
+-    iget-boolean p0, p0, Lcom/android/camera/features/mode/doc/DocModule;->mJumpToEdit:Z
+-
+-    if-eqz p0, :cond_3
+-
+-    sget-object p0, Lch/b;->f:Lch/b;
+-
+-    invoke-interface {p3, p0}, Lcom/android/camera/module/t0;->j6(Lch/b;)V
++    .locals 0
+ 
+-    :cond_3
+     return-void
+ .end method
+ 
+@@ -1182,6 +1083,33 @@
+ 
+     move-result-object v14
+ 
++    if-nez v14, :cond_doc_path_ok
++
++    new-instance v3, Ljava/lang/StringBuilder;
++
++    const-string v4, "DOC_"
++
++    invoke-direct {v3, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
++
++    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
++
++    move-result-wide v4
++
++    invoke-virtual {v3, v4, v5}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
++
++    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
++
++    move-result-object v3
++
++    const-string v4, ".jpg"
++
++    invoke-static {v3, v4}, Ll8/y;->d(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object v14
++
++    :cond_doc_path_ok
++    const/4 v1, 0x0
++
+     const-string v3, "DocModule"
+ 
+     const-string/jumbo v4, "showDocumentPreview: savePath = "
+@@ -1361,15 +1289,8 @@
+ 
+     invoke-static {v8, v9}, La0/k5;->o(Lio/reactivex/Scheduler;Ljava/lang/Runnable;)Lio/reactivex/disposables/Disposable;
+ 
+-    sget-boolean v1, Lcom/android/camera/features/mode/doc/DocModule;->IS_SAVE_DOC_PREVIEW:Z
+-
+-    if-eqz v1, :cond_2
+-
+     invoke-direct {v0, v7, v14}, Lcom/android/camera/features/mode/doc/DocModule;->dumpPreview(Landroid/graphics/Bitmap;Ljava/lang/String;)V
+ 
+-    :cond_2
+-    invoke-direct {v0, v7, v14}, Lcom/android/camera/features/mode/doc/DocModule;->savePreview(Landroid/graphics/Bitmap;Ljava/lang/String;)V
+-
+     return-void
+ 
+     :cond_3
+diff --git a/smali/mg/d.smali b/smali/mg/d.smali
+index 966cb711..d7324b25 100644
+--- a/smali/mg/d.smali
++++ b/smali/mg/d.smali
+@@ -9,168 +9,11 @@
+ 
+ # direct methods
+ .method public static a()I
+-    .locals 6
++    .locals 1
+ 
+-    const-string v0, "GalleryUtil"
+-
+-    const-string/jumbo v1, "targetVersion(PROVIDER): "
+-
+-    sget-object v2, Lmg/d;->a:Ljava/lang/Integer;
+-
+-    if-eqz v2, :cond_0
+-
+-    sget-object v0, Lmg/d;->a:Ljava/lang/Integer;
+-
+-    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
+-
+-    move-result v0
++    const/4 v0, 0x2
+ 
+     return v0
+-
+-    :cond_0
+-    const/4 v2, 0x0
+-
+-    :try_start_0
+-    invoke-static {}, Lcom/xiaomi/camera/mivi/MIVISDKConfig;->getInstance()Lcom/xiaomi/camera/mivi/MIVISDKConfig;
+-
+-    move-result-object v3
+-
+-    invoke-virtual {v3}, Lcom/xiaomi/camera/mivi/MIVISDKConfig;->getContext()Landroid/content/Context;
+-
+-    move-result-object v3
+-
+-    invoke-virtual {v3}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
+-
+-    move-result-object v3
+-
+-    const-string v4, "com.miui.gallery"
+-
+-    const/16 v5, 0x80
+-
+-    invoke-virtual {v3, v4, v5}, Landroid/content/pm/PackageManager;->getApplicationInfo(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;
+-
+-    move-result-object v3
+-
+-    if-eqz v3, :cond_1
+-
+-    iget-object v3, v3, Landroid/content/pm/ApplicationInfo;->metaData:Landroid/os/Bundle;
+-
+-    if-eqz v3, :cond_1
+-
+-    const-string v4, "com.miui.gallery.target_ppp_version"
+-
+-    invoke-virtual {v3, v4, v2}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
+-
+-    move-result v3
+-    :try_end_0
+-    .catch Landroid/content/pm/PackageManager$NameNotFoundException; {:try_start_0 .. :try_end_0} :catch_1
+-    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+-
+-    goto :goto_1
+-
+-    :catch_0
+-    move-exception v3
+-
+-    const-string v4, "failed to get version from metadata"
+-
+-    invoke-static {v0, v4, v3}, Lcom/android/camera/log/Log;->w(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+-
+-    goto :goto_0
+-
+-    :catch_1
+-    move-exception v3
+-
+-    const-string v4, "failed to find package"
+-
+-    invoke-static {v0, v4, v3}, Lcom/android/camera/log/Log;->w(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+-
+-    invoke-static {}, Lcom/xiaomi/camera/mivi/MIVISDKConfig;->getInstance()Lcom/xiaomi/camera/mivi/MIVISDKConfig;
+-
+-    move-result-object v3
+-
+-    invoke-virtual {v3}, Lcom/xiaomi/camera/mivi/MIVISDKConfig;->isAndroidGo()Z
+-
+-    move-result v3
+-
+-    if-nez v3, :cond_1
+-
+-    invoke-static {}, Lcom/xiaomi/camera/mivi/MIVISDKConfig;->getInstance()Lcom/xiaomi/camera/mivi/MIVISDKConfig;
+-
+-    move-result-object v3
+-
+-    invoke-virtual {v3}, Lcom/xiaomi/camera/mivi/MIVISDKConfig;->isAndroidOne()Z
+-
+-    move-result v3
+-
+-    if-nez v3, :cond_1
+-
+-    const/4 v3, 0x4
+-
+-    goto :goto_1
+-
+-    :cond_1
+-    :goto_0
+-    move v3, v2
+-
+-    :goto_1
+-    if-eqz v3, :cond_2
+-
+-    :goto_2
+-    invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+-
+-    move-result-object v0
+-
+-    sput-object v0, Lmg/d;->a:Ljava/lang/Integer;
+-
+-    return v3
+-
+-    :cond_2
+-    :try_start_1
+-    invoke-static {}, Lmg/d;->b()I
+-
+-    move-result v3
+-
+-    new-instance v4, Ljava/lang/StringBuilder;
+-
+-    invoke-direct {v4, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+-
+-    invoke-virtual {v4, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+-
+-    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+-
+-    move-result-object v1
+-
+-    new-array v4, v2, [Ljava/lang/Object;
+-
+-    invoke-static {v0, v1, v4}, Lcom/android/camera/log/Log;->w(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+-
+-    if-eqz v3, :cond_3
+-
+-    goto :goto_2
+-
+-    :cond_3
+-    const/4 v3, 0x2
+-
+-    const-string/jumbo v1, "targetVersion(DEFAULT): 2"
+-
+-    new-array v2, v2, [Ljava/lang/Object;
+-
+-    invoke-static {v0, v1, v2}, Lcom/android/camera/log/Log;->w(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+-    :try_end_1
+-    .catchall {:try_start_1 .. :try_end_1} :catchall_0
+-
+-    goto :goto_2
+-
+-    :catchall_0
+-    move-exception v0
+-
+-    invoke-static {v3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+-
+-    move-result-object v1
+-
+-    sput-object v1, Lmg/d;->a:Ljava/lang/Integer;
+-
+-    throw v0
+ .end method
+ 
+ .method public static b()I
+-- 
+2.43.0
+

@@ -1,0 +1,207 @@
+From d8e02cc8fecb43d05180b78d69d1fef7c6e3d9a3 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Tue, 3 Nov 2026 18:26:34 +0700
+Subject: [PATCH] MiuiCamera: Force standard session operating mode for Short
+ Video (MiLive)
+
+---
+ smali/b3/b.smali                              | 68 +------------
+ smali_classes4/com/xiaomi/milive/mode/h.smali | 99 +------------------
+ 2 files changed, 6 insertions(+), 161 deletions(-)
+
+diff --git a/smali/b3/b.smali b/smali/b3/b.smali
+index a51c341c..4e67a5e0 100644
+--- a/smali/b3/b.smali
++++ b/smali/b3/b.smali
+@@ -15,73 +15,11 @@
+ 
+ # virtual methods
+ .method public l(Lb3/x;)I
+-    .locals 3
+-
+-    move-object v0, p1
+-
+-    check-cast v0, Lb3/y;
+-
+-    iget-boolean v0, v0, Lb3/y;->e:Z
+-
+-    const/4 v1, 0x0
+-
+-    if-eqz v0, :cond_0
+-
+-    const p1, 0x8004
+-
+-    goto :goto_0
+-
+-    :cond_0
+-    iget-object p1, p1, Lb3/x;->d:Lca/c;
+-
+-    invoke-static {p1}, Lca/d;->r3(Lca/c;)Z
+-
+-    move-result p1
+-
+-    if-eqz p1, :cond_1
+-
+-    const p1, 0x8009
+-
+-    goto :goto_0
+-
+-    :cond_1
+-    sget-boolean p1, Ltc/b;->i:Z
+-
+-    sget-object p1, Ltc/b$b;->a:Ltc/b;
+-
+-    iget-object p1, p1, Ltc/b;->e:L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;
+-
+-    invoke-virtual {p1}, L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;->C2()Z
+-
+-    move-result p1
+-
+-    if-eqz p1, :cond_2
+-
+-    const p1, 0x8030
+-
+-    goto :goto_0
+-
+-    :cond_2
+-    move p1, v1
+-
+-    :goto_0
+-    new-instance v0, Ljava/lang/StringBuilder;
+-
+-    const-string v2, "getOperatingMode: "
+-
+-    invoke-direct {v0, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+-
+-    invoke-static {p1, v0}, La0/w3;->c(ILjava/lang/StringBuilder;)Ljava/lang/String;
+-
+-    move-result-object v0
+-
+-    new-array v1, v1, [Ljava/lang/Object;
+-
+-    iget-object p0, p0, Lb3/d;->a:Ljava/lang/String;
++    .locals 0
+ 
+-    invoke-static {p0, v0, v1}, Lcom/android/camera/log/Log;->d(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
++    const/4 p0, 0x0
+ 
+-    return p1
++    return p0
+ .end method
+ 
+ .method public q(Lu6/j;)V
+diff --git a/smali_classes4/com/xiaomi/milive/mode/h.smali b/smali_classes4/com/xiaomi/milive/mode/h.smali
+index b999b7bc..acf8d48e 100644
+--- a/smali_classes4/com/xiaomi/milive/mode/h.smali
++++ b/smali_classes4/com/xiaomi/milive/mode/h.smali
+@@ -23,104 +23,11 @@
+ .end method
+ 
+ .method public final l(Lb3/x;)I
+-    .locals 2
+-
+-    iget v0, p1, Lb3/x;->a:I
+-
+-    invoke-static {v0}, Lcom/android/camera/data/data/g0;->J(I)Z
+-
+-    move-result v0
+-
+-    if-nez v0, :cond_4
+-
+-    invoke-static {}, Lcom/android/camera/data/data/o;->K()Z
+-
+-    move-result v0
+-
+-    if-eqz v0, :cond_4
+-
+-    invoke-virtual {p1}, Lb3/x;->a()Z
+-
+-    move-result v0
+-
+-    if-eqz v0, :cond_0
+-
+-    iget-object v0, p1, Lb3/x;->d:Lca/c;
+-
+-    invoke-static {v0}, Lca/d;->x2(Lca/c;)Z
+-
+-    move-result v0
+-
+-    if-eqz v0, :cond_0
+-
+-    goto :goto_0
+-
+-    :cond_0
+-    move-object v0, p1
+-
+-    check-cast v0, Lb3/y;
+-
+-    iget-boolean v0, v0, Lb3/y;->e:Z
+-
+-    if-eqz v0, :cond_1
+-
+-    const p1, 0x8004
+-
+-    goto :goto_1
+-
+-    :cond_1
+-    iget-object p1, p1, Lb3/x;->d:Lca/c;
+-
+-    invoke-static {p1}, Lca/d;->r3(Lca/c;)Z
+-
+-    move-result p1
+-
+-    if-eqz p1, :cond_2
+-
+-    const p1, 0x8009
+-
+-    goto :goto_1
+-
+-    :cond_2
+-    sget-object p1, Ltc/b$b;->a:Ltc/b;
+-
+-    iget-object p1, p1, Ltc/b;->e:L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;
+-
+-    invoke-virtual {p1}, L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;->C2()Z
+-
+-    move-result p1
+-
+-    if-eqz p1, :cond_3
+-
+-    const p1, 0x8030
+-
+-    goto :goto_1
+-
+-    :cond_3
+-    const/4 p1, 0x0
+-
+-    goto :goto_1
+-
+-    :cond_4
+-    :goto_0
+-    const p1, 0x8019
+-
+-    :goto_1
+-    new-instance v0, Ljava/lang/StringBuilder;
+-
+-    const-string v1, "getOperatingMode: "
+-
+-    invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
+-
+-    invoke-static {p1, v0}, La0/w3;->c(ILjava/lang/StringBuilder;)Ljava/lang/String;
+-
+-    move-result-object v0
+-
+-    iget-object p0, p0, Lb3/d;->a:Ljava/lang/String;
++    .locals 0
+ 
+-    invoke-static {p0, v0}, Lcom/android/camera/log/LogK;->i(Ljava/lang/String;Ljava/lang/String;)V
++    const/4 p0, 0x0
+ 
+-    return p1
++    return p0
+ .end method
+ 
+ .method public final m()Ljava/lang/String;
+-- 
+2.43.0
+

@@ -37,6 +37,7 @@ allow platform_app_36 vendor_camera_data_file:file { getattr open read };
 
 allow platform_app_36 app_data_file:file execute;
 
+get_prop(platform_app_36, vendor_camera_prop)
 get_prop(platform_app_36, vendor_camera_sensor_prop)
 get_prop(platform_app_36, vendor_display_prop)
 get_prop(platform_app_36, vendor_panel_info_prop)

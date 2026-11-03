@@ -1,0 +1,26 @@
+From 3a9c5d745ade1d89506029a3dccbbbe1bf97b9a2 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Tue, 3 Nov 2026 09:30:43 +0700
+Subject: [PATCH] MiuiCamera: Load xiaomi.scaler.availableStreamConfigurations
+ on Qualcomm
+
+---
+ .../com/android/camera2/compat/MiCameraCompatBaseImpl.smali     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/smali_classes2/com/android/camera2/compat/MiCameraCompatBaseImpl.smali b/smali_classes2/com/android/camera2/compat/MiCameraCompatBaseImpl.smali
+index 2e7930ed..b2fcb752 100644
+--- a/smali_classes2/com/android/camera2/compat/MiCameraCompatBaseImpl.smali
++++ b/smali_classes2/com/android/camera2/compat/MiCameraCompatBaseImpl.smali
+@@ -4216,7 +4216,7 @@
+         }
+     .end annotation
+ 
+-    const/4 p0, 0x0
++    sget-object p0, Lqa/e;->t:Lqa/d;
+ 
+     return-object p0
+ .end method
+-- 
+2.43.0
+

@@ -1,0 +1,82 @@
+From c666d9ba17c39b479cdcfa4b03fad9e22aadbdd2 Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Tue, 3 Nov 2026 22:20:43 +0700
+Subject: [PATCH] MiuiCamera: Fix portrait bokeh blur and prevent capture hang
+
+---
+ smali_classes2/fh/q.smali | 17 -----------------
+ smali_classes2/h7/g.smali |  2 +-
+ smali_classes2/l8/a.smali |  3 +++
+ 3 files changed, 4 insertions(+), 18 deletions(-)
+
+diff --git a/smali_classes2/fh/q.smali b/smali_classes2/fh/q.smali
+index 6b77112c..20b4fdd4 100644
+--- a/smali_classes2/fh/q.smali
++++ b/smali_classes2/fh/q.smali
+@@ -1134,29 +1134,12 @@
+ 
+     :cond_4
+     :pswitch_2
+-    iget-boolean p1, p0, Lfh/q;->d0:Z
+-
+-    if-eqz p1, :cond_5
+-
+     iget-object p1, p0, Lfh/q;->i:[B
+ 
+     if-eqz p1, :cond_0
+ 
+     goto :goto_0
+ 
+-    :cond_5
+-    iget-object p1, p0, Lfh/q;->i:[B
+-
+-    if-eqz p1, :cond_0
+-
+-    iget-object p1, p0, Lfh/q;->k:[B
+-
+-    if-eqz p1, :cond_0
+-
+-    iget-object p1, p0, Lfh/q;->l:[B
+-
+-    if-eqz p1, :cond_0
+-
+     :goto_0
+     const-string p1, "ParallelTaskData"
+ 
+diff --git a/smali_classes2/h7/g.smali b/smali_classes2/h7/g.smali
+index a7705e83..66c4462d 100644
+--- a/smali_classes2/h7/g.smali
++++ b/smali_classes2/h7/g.smali
+@@ -54,7 +54,7 @@
+ .method public final c()Ljava/lang/Object;
+     .locals 6
+ 
+-    const/4 v0, 0x0
++    const/4 v0, 0x2
+ 
+     invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+ 
+diff --git a/smali_classes2/l8/a.smali b/smali_classes2/l8/a.smali
+index 1b3dcb7d..753d20a8 100644
+--- a/smali_classes2/l8/a.smali
++++ b/smali_classes2/l8/a.smali
+@@ -1890,6 +1890,8 @@
+ 
+     invoke-virtual {v5, v0, v1, v13}, Ll8/l;->r(Lv2/d;Lbe/b;Lv2/i;)V
+ 
++    if-nez v2, :cond_b_skip
++
+     invoke-static/range {v46 .. v46}, Lbe/a;->c([B)Lbe/b;
+ 
+     move-result-object v1
+@@ -1915,6 +1917,7 @@
+ 
+     invoke-virtual {v5, v2, v1, v13}, Ll8/l;->r(Lv2/d;Lbe/b;Lv2/i;)V
+ 
++    :cond_b_skip
+     iget-object v1, v0, Lv2/d;->a:Ljava/lang/Object;
+ 
+     move-object v15, v1
+-- 
+2.43.0
+

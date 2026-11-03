@@ -1,0 +1,32 @@
+From 8fffb4322ec718eedbd5fb89eeabe4ea728622bb Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Tue, 3 Nov 2026 20:02:01 +0700
+Subject: [PATCH] MiuiCamera: Suppress masterCameraId lookup spam in preview
+ callback
+
+---
+ smali_classes2/l8/l.smali | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/smali_classes2/l8/l.smali b/smali_classes2/l8/l.smali
+index b4a6c240..6cea41f3 100644
+--- a/smali_classes2/l8/l.smali
++++ b/smali_classes2/l8/l.smali
+@@ -2918,13 +2918,7 @@
+ 
+     invoke-virtual {v3, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+-    sget-object v1, Lqa/y;->x:Lqa/x;
+-
+-    invoke-static {v0, v1}, Lqa/a0;->c(Landroid/hardware/camera2/CaptureResult;Lqa/z;)Ljava/lang/Object;
+-
+-    move-result-object v1
+-
+-    check-cast v1, Ljava/lang/Integer;
++    const/4 v1, 0x0
+ 
+     new-instance v5, Ljava/lang/StringBuilder;
+ 
+-- 
+2.43.0
+

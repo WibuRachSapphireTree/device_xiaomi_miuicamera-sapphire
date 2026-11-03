@@ -1,0 +1,206 @@
+From baf1211f758b38c58073fb042ed18b9bc98e09cb Mon Sep 17 00:00:00 2001
+From: Huy7684 <huyplus7684@gmail.com>
+Date: Tue, 3 Nov 2026 19:38:36 +0700
+Subject: [PATCH] MiuiCamera: Fix 108MP resolution selection in normal photo
+ mode and suppress warnings
+
+---
+ smali/a0/r4.smali                             |  2 +-
+ smali/b/a.smali                               |  8 ++-
+ .../android/camera/module/Camera2Module.smali |  9 ++++
+ smali_classes2/x6/h.smali                     | 52 ++++---------------
+ smali_classes2/x6/p.smali                     |  9 ++++
+ smali_classes3/tc/b.smali                     | 20 +------
+ 6 files changed, 36 insertions(+), 64 deletions(-)
+
+diff --git a/smali/a0/r4.smali b/smali/a0/r4.smali
+index 5855c9ce..52ccf16c 100644
+--- a/smali/a0/r4.smali
++++ b/smali/a0/r4.smali
+@@ -126,7 +126,7 @@
+ 
+     new-array v4, v3, [Ljava/lang/Object;
+ 
+-    invoke-static {v1, v0, v4}, Lcom/android/camera/log/Log;->e(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
++    invoke-static {v1, v0, v4}, Lcom/android/camera/log/Log;->d(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+ 
+     :goto_0
+     const-string/jumbo v0, "setBrightnessRampRate2: "
+diff --git a/smali/b/a.smali b/smali/b/a.smali
+index df44171b..1993da62 100644
+--- a/smali/b/a.smali
++++ b/smali/b/a.smali
+@@ -659,9 +659,13 @@
+ 
+     if-eqz p1, :cond_5
+ 
+-    const-string v1, "isPackageAvailable: package not exist"
++    const/4 v1, 0x0
++
++    new-array v1, v1, [Ljava/lang/Object;
++
++    const-string v2, "isPackageAvailable: package not exist"
+ 
+-    invoke-static {v0, v1, p1}, Lcom/android/camera/log/Log;->w(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
++    invoke-static {v0, v2, v1}, Lcom/android/camera/log/Log;->d(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+ 
+     :cond_5
+     sget-object p1, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+diff --git a/smali_classes2/com/android/camera/module/Camera2Module.smali b/smali_classes2/com/android/camera/module/Camera2Module.smali
+index 2b14331f..f0fcfd50 100644
+--- a/smali_classes2/com/android/camera/module/Camera2Module.smali
++++ b/smali_classes2/com/android/camera/module/Camera2Module.smali
+@@ -15364,6 +15364,15 @@
+ 
+     if-nez v9, :cond_53
+ 
++    invoke-interface {v2}, Lu6/j;->o1()I
++
++    move-result v13
++
++    if-eqz v13, :cond_rear_c2m
++
++    goto :cond_53
++
++    :cond_rear_c2m
+     sget-object v13, Ltc/b$b;->a:Ltc/b;
+ 
+     invoke-virtual {v13}, Ltc/b;->J1()Z
+diff --git a/smali_classes2/x6/h.smali b/smali_classes2/x6/h.smali
+index deca223e..9f2ba470 100644
+--- a/smali_classes2/x6/h.smali
++++ b/smali_classes2/x6/h.smali
+@@ -34,58 +34,26 @@
+     const/4 v1, 0x1
+ 
+-    if-eqz p0, :cond_qcfa_normal
++    if-eqz p0, :cond_check_pixel_mode
+ 
+     return v1
+ 
+-    :cond_qcfa_normal
+-    invoke-static {}, Lcom/android/camera/data/data/s;->j()Z
++    :cond_check_pixel_mode
++    invoke-static {}, La1/a;->h()Lg1/p;
++
++    move-result-object p0
++
++    invoke-virtual {p0}, Lg1/p;->C()I
+ 
+     move-result p0
+ 
+-    if-eqz p0, :cond_1
++    const/16 v1, 0xaf
+ 
+-    return v1
++    if-ne p0, v1, :cond_fallback_false
+ 
+-    :cond_1
+-    if-nez p1, :cond_2
+-
+-    return v0
+-
+-    :cond_2
+-    sget-boolean p0, Ltc/c;->h:Z
+-
+-    if-eqz p0, :cond_3
+-
+-    invoke-static {}, Lcom/android/camera/data/data/o;->T()Z
+-
+-    move-result p0
++    const/4 p0, 0x1
+ 
+     return p0
+ 
+-    :cond_3
+-    if-eqz p2, :cond_4
+-
+-    return v1
+-
+-    :cond_4
+-    invoke-static {}, Lcom/android/camera/data/data/o;->T()Z
+-
+-    move-result p0
+-
+-    if-eqz p0, :cond_5
+-
+-    sget-object p0, Ltc/b$b;->a:Ltc/b;
+-
+-    iget-object p0, p0, Ltc/b;->e:L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;
+-
+-    invoke-virtual {p0}, L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;->k8()Z
+-
+-    move-result p0
+-
+-    if-eqz p0, :cond_5
+-
+-    move v0, v1
+-
+-    :cond_5
++    :cond_fallback_false
+     return v0
+ .end method
+
+diff --git a/smali_classes2/x6/p.smali b/smali_classes2/x6/p.smali
+index 164c6fc8..fe2be368 100644
+--- a/smali_classes2/x6/p.smali
++++ b/smali_classes2/x6/p.smali
+@@ -3167,6 +3167,15 @@
+ 
+     if-nez p2, :cond_19
+ 
++    invoke-interface {p3}, Lu6/j;->o1()I
++
++    move-result p2
++
++    if-eqz p2, :cond_rear_p
++
++    goto :cond_19
++
++    :cond_rear_p
+     sget-object p2, Ltc/b$b;->a:Ltc/b;
+ 
+     invoke-virtual {p2}, Ltc/b;->J1()Z
+diff --git a/smali_classes3/tc/b.smali b/smali_classes3/tc/b.smali
+index 94d6d397..d44a6b3c 100644
+--- a/smali_classes3/tc/b.smali
++++ b/smali_classes3/tc/b.smali
+@@ -1235,22 +1235,8 @@
+ .method public final J1()Z
+     .locals 0
+ 
+-    iget-object p0, p0, Ltc/b;->e:L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;
+-
+-    invoke-virtual {p0}, L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;->I1()I
+-
+-    move-result p0
+-
+-    if-lez p0, :cond_0
+-
+     const/4 p0, 0x1
+ 
+-    goto :goto_0
+-
+-    :cond_0
+-    const/4 p0, 0x0
+-
+-    :goto_0
+     return p0
+ .end method
+ 
+@@ -5112,11 +5098,7 @@
+ .method public final y()I
+     .locals 0
+ 
+-    iget-object p0, p0, Ltc/b;->e:L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;
+-
+-    invoke-virtual {p0}, L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;->I1()I
+-
+-    move-result p0
++    const/16 p0, 0xfa0
+ 
+     return p0
+ .end method
+-- 
+2.43.0
+

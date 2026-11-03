@@ -1,15 +1,15 @@
-From 3832100dfdc6c305d9847badc588f24d4c094ed3 Mon Sep 17 00:00:00 2001
+From ad298792fe7c80aa5423e1156216056c6ae0db75 Mon Sep 17 00:00:00 2001
 From: Huy7684 <huyplus7684@gmail.com>
-Date: Tue, 3 Nov 2026 22:52:52 +0700
-Subject: [PATCH] MiuiCamera: Enable offline watermark and filter rendering for
- single and portrait capture
+Date: Tue, 3 Nov 2026 23:51:48 +0700
+Subject: [PATCH 20/20] MiuiCamera: Enable offline watermark and filter
+ rendering for single and portrait capture
 
 ---
- smali_classes2/l8/a.smali | 47 +++++++++++++++++----------------------
- 1 file changed, 21 insertions(+), 26 deletions(-)
+ smali_classes2/l8/a.smali | 45 +++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 25 deletions(-)
 
 diff --git a/smali_classes2/l8/a.smali b/smali_classes2/l8/a.smali
-index 753d20a8..dc0292fd 100644
+index 5602415c..72304edb 100644
 --- a/smali_classes2/l8/a.smali
 +++ b/smali_classes2/l8/a.smali
 @@ -1564,8 +1564,21 @@
@@ -17,17 +17,17 @@ index 753d20a8..dc0292fd 100644
      const/16 v39, -0x1
  
 -    if-eqz v1, :cond_d
-+    if-eqz v1, :cond_render_portrait
++    if-nez v1, :cond_render_portrait
  
 +    invoke-virtual {v5}, Lfh/r;->c()Z
 +
 +    move-result v6
 +
-+    if-eqz v6, :cond_render_portrait
++    if-nez v6, :cond_render_portrait
 +
 +    iget-boolean v6, v5, Lfh/r;->a:Z
 +
-+    if-eqz v6, :cond_render_portrait
++    if-nez v6, :cond_render_portrait
 +
 +    goto :cond_d
 +
@@ -35,7 +35,7 @@ index 753d20a8..dc0292fd 100644
      iget-object v11, v5, Lfh/r;->h:Landroid/util/Size;
  
      invoke-virtual {v11}, Landroid/util/Size;->getWidth()I
-@@ -2414,37 +2427,19 @@
+@@ -2416,37 +2429,19 @@
      :goto_11
      move-object v12, v5
  
@@ -46,34 +46,33 @@ index 753d20a8..dc0292fd 100644
 -    iget-boolean v5, v1, Lfh/r;->a:Z
 -
 -    if-nez v5, :cond_18
-+    if-eqz v4, :cond_19
- 
+-
 -    const/4 v5, 0x1
 -
 -    goto :goto_12
--
++    if-nez v4, :cond_19
+ 
 -    :cond_18
 -    const/4 v5, 0x0
--
--    :goto_12
--    if-eqz v4, :cond_1d
--
--    if-nez v5, :cond_19
--
--    sget-boolean v5, Ltc/b;->i:Z
 +    invoke-virtual {v1}, Lfh/r;->c()Z
  
--    sget-object v5, Ltc/b$b;->a:Ltc/b;
+-    :goto_12
+-    if-eqz v4, :cond_1d
 +    move-result v5
  
--    iget-object v5, v5, Ltc/b;->e:L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;
-+    if-eqz v5, :cond_19
+     if-nez v5, :cond_19
  
+-    sget-boolean v5, Ltc/b;->i:Z
+-
+-    sget-object v5, Ltc/b$b;->a:Ltc/b;
+-
+-    iget-object v5, v5, Ltc/b;->e:L菾菲菰莳菰菴莳菹菸菫菴菾菸莳菾菲菰菰菲菳莳菞菲菰菰菲菳;
+-
 -    invoke-virtual {v5}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
 +    iget-boolean v5, v1, Lfh/r;->a:Z
  
 -    instance-of v5, v5, L좟좓좑죒좑좕죒좘좙좊좕좟좙죒좮좙좑좞좎좝좒좘좈;
-+    if-eqz v5, :cond_19
++    if-nez v5, :cond_19
  
 -    if-eqz v5, :cond_1d
 +    goto :cond_1d

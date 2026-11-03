@@ -1,13 +1,14 @@
-From c666d9ba17c39b479cdcfa4b03fad9e22aadbdd2 Mon Sep 17 00:00:00 2001
+From ef1b74faa923475a00574d1cd77dde46ca1cdb63 Mon Sep 17 00:00:00 2001
 From: Huy7684 <huyplus7684@gmail.com>
-Date: Tue, 3 Nov 2026 22:20:43 +0700
-Subject: [PATCH] MiuiCamera: Fix portrait bokeh blur and prevent capture hang
+Date: Tue, 3 Nov 2026 23:51:31 +0700
+Subject: [PATCH 19/20] MiuiCamera: Fix portrait bokeh blur and prevent capture
+ hang
 
 ---
  smali_classes2/fh/q.smali | 17 -----------------
  smali_classes2/h7/g.smali |  2 +-
- smali_classes2/l8/a.smali |  3 +++
- 3 files changed, 4 insertions(+), 18 deletions(-)
+ smali_classes2/l8/a.smali |  5 +++++
+ 3 files changed, 6 insertions(+), 18 deletions(-)
 
 diff --git a/smali_classes2/fh/q.smali b/smali_classes2/fh/q.smali
 index 6b77112c..20b4fdd4 100644
@@ -57,19 +58,21 @@ index a7705e83..66c4462d 100644
      invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
  
 diff --git a/smali_classes2/l8/a.smali b/smali_classes2/l8/a.smali
-index 1b3dcb7d..753d20a8 100644
+index 1b3dcb7d..5602415c 100644
 --- a/smali_classes2/l8/a.smali
 +++ b/smali_classes2/l8/a.smali
-@@ -1890,6 +1890,8 @@
+@@ -1890,6 +1890,10 @@
  
      invoke-virtual {v5, v0, v1, v13}, Ll8/l;->r(Lv2/d;Lbe/b;Lv2/i;)V
  
-+    if-nez v2, :cond_b_skip
++    if-eqz v2, :cond_b_skip
++
++    if-eqz v46, :cond_b_skip
 +
      invoke-static/range {v46 .. v46}, Lbe/a;->c([B)Lbe/b;
  
      move-result-object v1
-@@ -1915,6 +1917,7 @@
+@@ -1915,6 +1919,7 @@
  
      invoke-virtual {v5, v2, v1, v13}, Ll8/l;->r(Lv2/d;Lbe/b;Lv2/i;)V
  

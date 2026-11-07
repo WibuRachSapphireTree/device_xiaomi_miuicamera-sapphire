@@ -1,11 +1,12 @@
 From 206fe73e2de45e519dd2a6a8ee61d34a6cdaf68f Mon Sep 17 00:00:00 2001
 From: Huy7684 <huyplus7684@gmail.com>
 Date: Sun, 1 Nov 2026 17:46:49 +0700
-Subject: [PATCH] Fix NullPointerException and corrupted image when saving watermark photos
+Subject: [PATCH] Fix NullPointerException and enable film watermark for JPEG
+ photos
 
 ---
- smali_classes2/s9/c.smali | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ smali_classes2/s9/c.smali | 117 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
 
 diff --git a/smali_classes2/s9/c.smali b/smali_classes2/s9/c.smali
 index 0a1824f8..6426b186 100644
@@ -27,7 +28,7 @@ index 0a1824f8..6426b186 100644
      sget-object v0, Landroid/hardware/camera2/CaptureResult;->SENSOR_EXPOSURE_TIME:Landroid/hardware/camera2/CaptureResult$Key;
  
      invoke-virtual {p0, v0}, Landroid/hardware/camera2/CaptureResult;->get(Landroid/hardware/camera2/CaptureResult$Key;)Ljava/lang/Object;
-@@ -357,6 +366,35 @@
+@@ -357,6 +366,62 @@
      return-void
  
      :cond_0
@@ -57,13 +58,40 @@ index 0a1824f8..6426b186 100644
 +
 +    if-ne v0, v2, :cond_not_jpeg
 +
++    iget-object v0, v1, Lfh/q;->i:[B
++
++    invoke-static {v0}, Ls9/c;->e([B)Lyh/d;
++
++    move-result-object v0
++
++    if-eqz v0, :cond_ret_early
++
++    iget-object v2, v0, Lyh/d;->a:[B
++
++    iput-object v2, v1, Lfh/q;->i:[B
++
++    new-instance v2, Landroid/util/Size;
++
++    iget v3, v0, Lyh/d;->b:I
++
++    iget v0, v0, Lyh/d;->c:I
++
++    invoke-direct {v2, v3, v0}, Landroid/util/Size;-><init>(II)V
++
++    iget-object v0, v1, Lfh/q;->q:Lfh/r;
++
++    iput-object v2, v0, Lfh/r;->i:Landroid/util/Size;
++
++    goto :cond_not_jpeg
++
++    :cond_ret_early
 +    return-void
 +
 +    :cond_not_jpeg
      iget-object v0, v1, Lfh/q;->q:Lfh/r;
  
      iget-boolean v0, v0, Lfh/r;->a:Z
-@@ -401,10 +439,17 @@
+@@ -401,10 +466,17 @@
  
      iget-object v3, v1, Lfh/q;->g:Lcom/xiaomi/protocol/ICustomCaptureResult;
  
@@ -81,5 +109,81 @@ index 0a1824f8..6426b186 100644
      :cond_3
      invoke-static {v3}, Ls9/c;->c(Landroid/hardware/camera2/TotalCaptureResult;)Lyh/b;
  
+@@ -1660,3 +1732,75 @@
+ 
+     throw v0
+ .end method
++
++.method public static e([B)Lyh/d;
++    .locals 5
++
++    const/4 v0, 0x0
++
++    if-nez p0, :cond_0
++
++    return-object v0
++
++    :cond_0
++    const/4 v1, 0x0
++
++    array-length v2, p0
++
++    invoke-static {p0, v1, v2}, Landroid/graphics/BitmapFactory;->decodeByteArray([BII)Landroid/graphics/Bitmap;
++
++    move-result-object p0
++
++    if-nez p0, :cond_1
++
++    return-object v0
++
++    :cond_1
++    invoke-virtual {p0}, Landroid/graphics/Bitmap;->getWidth()I
++
++    move-result v0
++
++    invoke-virtual {p0}, Landroid/graphics/Bitmap;->getHeight()I
++
++    move-result v1
++
++    sget-object v2, Lzh/b$a;->a:Lzh/b;
++
++    mul-int v3, v0, v1
++
++    mul-int/lit8 v3, v3, 0x3
++
++    div-int/lit8 v3, v3, 0x2
++
++    invoke-virtual {v2, v3}, Lzh/b;->b(I)[B
++
++    move-result-object v3
++
++    invoke-virtual {p0}, Landroid/graphics/Bitmap;->getByteCount()I
++
++    move-result v4
++
++    invoke-virtual {v2, v4}, Lzh/b;->b(I)[B
++
++    move-result-object v4
++
++    invoke-static {v4}, Ljava/nio/ByteBuffer;->wrap([B)Ljava/nio/ByteBuffer;
++
++    move-result-object v4
++
++    invoke-virtual {p0, v4}, Landroid/graphics/Bitmap;->copyPixelsToBuffer(Ljava/nio/Buffer;)V
++
++    invoke-virtual {v4}, Ljava/nio/ByteBuffer;->array()[B
++
++    move-result-object v4
++
++    invoke-static {v4, v3, v0, v1}, Lcom/xiaomi/libyuv/YuvUtils;->RGBAToI420([B[BII)I
++
++    invoke-virtual {p0}, Landroid/graphics/Bitmap;->recycle()V
++
++    new-instance p0, Lyh/d;
++
++    invoke-direct {p0, v3, v0, v1}, Lyh/d;-><init>([BII)V
++
++    return-object p0
++.end method
 -- 
 2.43.0

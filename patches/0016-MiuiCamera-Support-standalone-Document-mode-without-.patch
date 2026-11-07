@@ -1,6 +1,6 @@
-From 4e095cf0b14695922f5a50296750f94b244aca88 Mon Sep 17 00:00:00 2001
+From 8302aa41f1dc907b24f4d5a624545f146ac0b117 Mon Sep 17 00:00:00 2001
 From: Huy7684 <huyplus7684@gmail.com>
-Date: Tue, 3 Nov 2026 18:54:52 +0700
+Date: Sat, 7 Nov 2026 11:24:21 +0700
 Subject: [PATCH] MiuiCamera: Support standalone Document mode without
  MiuiGallery
 
@@ -8,7 +8,8 @@ Subject: [PATCH] MiuiCamera: Support standalone Document mode without
  smali/androidx/activity/m.smali               |   4 +-
  .../camera/features/mode/doc/DocModule.smali  | 135 +++------------
  smali/mg/d.smali                              | 161 +-----------------
- 3 files changed, 31 insertions(+), 269 deletions(-)
+ smali_classes2/ca/q1.smali                    |  17 ++
+ 4 files changed, 48 insertions(+), 269 deletions(-)
 
 diff --git a/smali/androidx/activity/m.smali b/smali/androidx/activity/m.smali
 index 2780c9de..ffc7829b 100644
@@ -26,7 +27,7 @@ index 2780c9de..ffc7829b 100644
      :try_start_3
      invoke-static {}, Lfh/c;->b()Lfh/c;
 diff --git a/smali/com/android/camera/features/mode/doc/DocModule.smali b/smali/com/android/camera/features/mode/doc/DocModule.smali
-index d546fd33..68d4c679 100644
+index d546fd33..41267455 100644
 --- a/smali/com/android/camera/features/mode/doc/DocModule.smali
 +++ b/smali/com/android/camera/features/mode/doc/DocModule.smali
 @@ -73,107 +73,8 @@
@@ -172,7 +173,7 @@ index d546fd33..68d4c679 100644
      const-string v3, "DocModule"
  
      const-string/jumbo v4, "showDocumentPreview: savePath = "
-@@ -1361,15 +1289,8 @@
+@@ -1361,13 +1289,6 @@
  
      invoke-static {v8, v9}, La0/k5;->o(Lio/reactivex/Scheduler;Ljava/lang/Runnable;)Lio/reactivex/disposables/Disposable;
  
@@ -180,14 +181,12 @@ index d546fd33..68d4c679 100644
 -
 -    if-eqz v1, :cond_2
 -
-     invoke-direct {v0, v7, v14}, Lcom/android/camera/features/mode/doc/DocModule;->dumpPreview(Landroid/graphics/Bitmap;Ljava/lang/String;)V
- 
--    :cond_2
--    invoke-direct {v0, v7, v14}, Lcom/android/camera/features/mode/doc/DocModule;->savePreview(Landroid/graphics/Bitmap;Ljava/lang/String;)V
+-    invoke-direct {v0, v7, v14}, Lcom/android/camera/features/mode/doc/DocModule;->dumpPreview(Landroid/graphics/Bitmap;Ljava/lang/String;)V
 -
-     return-void
+-    :cond_2
+     invoke-direct {v0, v7, v14}, Lcom/android/camera/features/mode/doc/DocModule;->savePreview(Landroid/graphics/Bitmap;Ljava/lang/String;)V
  
-     :cond_3
+     return-void
 diff --git a/smali/mg/d.smali b/smali/mg/d.smali
 index 966cb711..d7324b25 100644
 --- a/smali/mg/d.smali
@@ -363,6 +362,34 @@ index 966cb711..d7324b25 100644
  .end method
  
  .method public static b()I
+diff --git a/smali_classes2/ca/q1.smali b/smali_classes2/ca/q1.smali
+index 21c9a4a6..81e06a46 100644
+--- a/smali_classes2/ca/q1.smali
++++ b/smali_classes2/ca/q1.smali
+@@ -1369,6 +1369,23 @@
+     return-void
+ 
+     :cond_0
++    if-eqz p1, :cond_doc_not_skip
++
++    iget v3, p1, Lfh/q;->s:I
++
++    const/16 v4, 0xba
++
++    if-ne v3, v4, :cond_doc_not_skip
++
++    const-string p0, "notifyResultData: skip uncropped still in DocModule"
++
++    new-array p1, v1, [Ljava/lang/Object;
++
++    invoke-static {v2, p0, p1}, Lcom/android/camera/log/Log;->d(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
++
++    return-void
++
++    :cond_doc_not_skip
+     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
+ 
+     move-result-wide v3
 -- 
 2.43.0
 

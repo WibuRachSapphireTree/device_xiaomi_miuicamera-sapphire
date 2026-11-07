@@ -1,53 +1,15 @@
-From f5bc3fe461439e912461c38a40afc1348e1d3370 Mon Sep 17 00:00:00 2001
+From ef1b74faa923475a00574d1cd77dde46ca1cdb63 Mon Sep 17 00:00:00 2001
 From: Huy7684 <huyplus7684@gmail.com>
-Date: Sat, 7 Nov 2026 11:25:37 +0700
-Subject: [PATCH] MiuiCamera: Fix portrait bokeh blur and prevent capture hang
+Date: Tue, 3 Nov 2026 23:51:31 +0700
+Subject: [PATCH 19/20] MiuiCamera: Fix portrait bokeh blur and prevent capture
+ hang
 
 ---
- .../android/camera/module/Camera2Module.smali | 27 +------------------
- smali_classes2/fh/q.smali                     | 17 ------------
- smali_classes2/h7/g.smali                     |  2 +-
- smali_classes2/l8/a.smali                     |  5 ++++
- 4 files changed, 7 insertions(+), 44 deletions(-)
+ smali_classes2/fh/q.smali | 17 -----------------
+ smali_classes2/h7/g.smali |  2 +-
+ smali_classes2/l8/a.smali |  5 +++++
+ 3 files changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/smali_classes2/com/android/camera/module/Camera2Module.smali b/smali_classes2/com/android/camera/module/Camera2Module.smali
-index f0fcfd50..3e69cea3 100644
---- a/smali_classes2/com/android/camera/module/Camera2Module.smali
-+++ b/smali_classes2/com/android/camera/module/Camera2Module.smali
-@@ -11001,32 +11001,7 @@
- 
-     if-ne v2, v1, :cond_8
- 
--    iget-object v1, p0, Lcom/android/camera/module/BaseModule;->mCameraManager:Lu6/j;
--
--    invoke-interface {v1}, Lu6/j;->getCapabilities()Lca/c;
--
--    move-result-object v1
--
--    if-eqz v1, :cond_7
--
--    invoke-static {}, La1/a;->h()Lg1/p;
--
--    move-result-object v1
--
--    invoke-virtual {v1}, Lg1/p;->L()Z
--
--    move-result v1
--
--    invoke-static {v0, v1}, Lcom/android/camera/features/mode/street/c;->j(IZ)Ljava/lang/String;
--
--    move-result-object v0
--
--    goto :goto_3
--
--    :cond_7
--    const-string v0, "portrait"
--
--    goto :goto_3
-+    goto :cond_4
- 
-     :cond_8
-     iget-object v0, p0, Lcom/android/camera/module/BaseModule;->mMutexModePicker:La0/b6;
 diff --git a/smali_classes2/fh/q.smali b/smali_classes2/fh/q.smali
 index 6b77112c..20b4fdd4 100644
 --- a/smali_classes2/fh/q.smali
